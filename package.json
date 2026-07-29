@@ -18,6 +18,7 @@
     "astro": "^5.0.0",
     "tailwindcss": "^4.1.11"
   },
+  "packageManager": "npm@10.8.0",
   "devDependencies": {
     "sass": "^1.77.0"
   }
