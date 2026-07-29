@@ -1,5 +1,6 @@
 ---
 import type { Product } from '../types/product';
+import { addToCart } from '../lib/cart';
 
 interface Props {
   product: Product;
@@ -8,7 +9,37 @@ interface Props {
 const { product } = Astro.props;
 ---
 
-<article class="group overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+<script>
+  import { addToCart } from '../lib/cart';
+
+  document.addEventListener('click', (event) => {
+    const button = (event.target as HTMLElement | null)?.closest('[data-add-to-cart]');
+
+    if (!button) return;
+
+    event.preventDefault();
+
+    const productSlug = button.getAttribute('data-product-slug');
+    if (!productSlug) return;
+
+    addToCart(productSlug);
+    button.classList.add('cart-bounce');
+    button.textContent = 'Added';
+    button.setAttribute('aria-label', 'Added to cart');
+
+    window.setTimeout(() => {
+      button.classList.remove('cart-bounce');
+      button.textContent = 'Add to cart';
+      button.setAttribute('aria-label', 'Add to cart');
+    }, 900);
+  });
+</script>
+
+<article
+  class="group overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+  data-product-card
+  data-category={product.category}
+>
   <div class="relative">
     <img src={product.image} alt={product.name} class="h-56 w-full object-cover" />
     {product.badge && (
@@ -22,12 +53,34 @@ const { product } = Astro.props;
     </div>
     <h3 class="text-lg font-semibold text-slate-900">{product.name}</h3>
     <p class="text-sm leading-6 text-slate-600">{product.description}</p>
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between gap-3">
       <div>
         <p class="text-lg font-semibold text-slate-900">${product.price}</p>
         {product.oldPrice && <p class="text-sm text-slate-400 line-through">${product.oldPrice}</p>}
       </div>
-      <a href={`/shop/${product.slug}`} class="rounded-full bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-amber-600">View</a>
+      <div class="flex items-center gap-2">
+        <button
+          data-add-to-cart
+          data-product-slug={product.slug}
+          class="rounded-full border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition duration-200 hover:-translate-y-0.5 hover:border-amber-500 hover:text-amber-600 active:scale-95"
+        >
+          Add to cart
+        </button>
+        <a href={`/shop/${product.slug}`} class="rounded-full bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-amber-600">View</a>
+      </div>
     </div>
   </div>
 </article>
+
+<style>
+  .cart-bounce {
+    animation: cart-bounce 0.6s ease;
+  }
+
+  @keyframes cart-bounce {
+    0% { transform: scale(1); }
+    40% { transform: scale(0.95); }
+    70% { transform: scale(1.04); }
+    100% { transform: scale(1); }
+  }
+</style>

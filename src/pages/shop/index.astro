@@ -3,7 +3,13 @@ import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
 import ProductCard from '../../components/ProductCard.astro';
-import { products } from '../../data/products';
+import { products, categories } from '../../data/products';
+
+const allProducts = products;
+const categoryOptions = categories.map((category) => ({
+  value: category.slug,
+  label: category.name,
+}));
 ---
 
 <Layout title="Shop | Paw & Co.">
@@ -17,7 +23,7 @@ import { products } from '../../data/products';
           <h1 class="mt-2 text-4xl font-semibold text-slate-900">Everything your pet needs</h1>
           <p class="mt-3 max-w-2xl text-lg text-slate-600">Browse a curated collection of premium food, toys, grooming essentials, furniture and accessories.</p>
         </div>
-        <div class="rounded-full border border-slate-200 bg-white px-5 py-3 text-sm text-slate-600 shadow-sm">Showing {products.length} products</div>
+        <div id="product-count" class="rounded-full border border-slate-200 bg-white px-5 py-3 text-sm text-slate-600 shadow-sm">Showing {allProducts.length} products</div>
       </div>
 
       <div class="grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
@@ -26,14 +32,22 @@ import { products } from '../../data/products';
           <div class="mt-6 space-y-6 text-sm text-slate-600">
             <div>
               <h3 class="font-semibold text-slate-900">Search</h3>
-              <input type="search" placeholder="Search products" class="mt-3 w-full rounded-full border border-slate-200 px-4 py-3 outline-none focus:border-amber-500" />
+              <input id="product-search" type="search" placeholder="Search products" class="mt-3 w-full rounded-full border border-slate-200 px-4 py-3 outline-none focus:border-amber-500" />
             </div>
             <div>
-              <h3 class="font-semibold text-slate-900">Category</h3>
+              <div class="flex items-center justify-between">
+                <h3 class="font-semibold text-slate-900">Category</h3>
+                <button id="clear-filters" type="button" class="text-sm font-medium text-slate-500 transition hover:text-amber-600">✕ Clear</button>
+              </div>
               <ul class="mt-3 space-y-2">
-                <li><a href="#" class="hover:text-amber-600">All products</a></li>
-                <li><a href="#" class="hover:text-amber-600">Food</a></li>
-                <li><a href="#" class="hover:text-amber-600">Toys</a></li>
+                <li><button type="button" data-category-filter="all" class="category-filter text-left font-medium text-amber-600">All products</button></li>
+                {categoryOptions.map((category) => (
+                  <li>
+                    <button type="button" data-category-filter={category.value} class="category-filter text-left hover:text-amber-600">
+                      {category.label}
+                    </button>
+                  </li>
+                ))}
               </ul>
             </div>
             <div>
@@ -45,8 +59,8 @@ import { products } from '../../data/products';
           </div>
         </aside>
 
-        <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {products.map((product) => <ProductCard product={product} />)}
+        <div id="product-grid" class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {allProducts.map((product) => <ProductCard product={product} />)}
         </div>
       </div>
     </section>
@@ -54,3 +68,94 @@ import { products } from '../../data/products';
 
   <Footer />
 </Layout>
+
+<style>
+  [data-product-card] {
+    transition: opacity 0.25s ease, transform 0.25s ease, max-height 0.25s ease, margin 0.25s ease;
+  }
+
+  [data-product-card].hidden {
+    opacity: 0;
+    transform: scale(0.96);
+    max-height: 0;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  const searchInput = document.getElementById('product-search') as HTMLInputElement | null;
+  const productGrid = document.getElementById('product-grid');
+  const productCount = document.getElementById('product-count');
+  const categoryButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-category-filter]'));
+  const clearFiltersButton = document.getElementById('clear-filters');
+
+  if (searchInput && productGrid && productCount) {
+    const allCards = Array.from(productGrid.querySelectorAll<HTMLElement>('[data-product-card]'));
+    const activeCategories = new Set<string>();
+
+    const getCardCategory = (card: HTMLElement) => {
+      const category = card.getAttribute('data-category');
+      return category ? category.toLowerCase() : '';
+    };
+
+    const updateCategoryButtonState = () => {
+      categoryButtons.forEach((button) => {
+        const value = button.getAttribute('data-category-filter') || 'all';
+        const isActive = value === 'all' ? activeCategories.size === 0 : activeCategories.has(value);
+
+        button.classList.toggle('text-amber-600', isActive);
+        button.classList.toggle('font-medium', isActive);
+      });
+    };
+
+    const applyFilter = () => {
+      const query = searchInput.value.trim().toLowerCase();
+      let visibleCount = 0;
+
+      allCards.forEach((card) => {
+        const text = card.textContent?.toLowerCase() || '';
+        const matchesQuery = text.includes(query);
+        const cardCategory = getCardCategory(card);
+        const matchesCategory = activeCategories.size === 0 || Array.from(activeCategories).some((category) => cardCategory === category.toLowerCase());
+        const isVisible = matchesQuery && matchesCategory;
+
+        card.setAttribute('data-visible', isVisible ? 'true' : 'false');
+        card.classList.toggle('hidden', !isVisible);
+        if (isVisible) visibleCount += 1;
+      });
+
+      productCount.textContent = `Showing ${visibleCount} product${visibleCount === 1 ? '' : 's'}`;
+    };
+
+    categoryButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const value = button.getAttribute('data-category-filter') || 'all';
+
+        if (value === 'all') {
+          activeCategories.clear();
+        } else if (activeCategories.has(value)) {
+          activeCategories.delete(value);
+        } else {
+          activeCategories.add(value);
+        }
+
+        updateCategoryButtonState();
+        applyFilter();
+      });
+    });
+
+    clearFiltersButton?.addEventListener('click', () => {
+      activeCategories.clear();
+      searchInput.value = '';
+      updateCategoryButtonState();
+      applyFilter();
+    });
+
+    searchInput.addEventListener('input', applyFilter);
+    applyFilter();
+  }
+</script>
