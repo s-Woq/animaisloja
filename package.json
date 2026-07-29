@@ -4,7 +4,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "prebuild": "chmod +x node_modules/.bin/* || true",
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",

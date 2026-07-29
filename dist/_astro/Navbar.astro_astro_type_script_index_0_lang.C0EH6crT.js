@@ -1,0 +1,1 @@
+import{g as o}from"./cart.BrqaTR9r.js";const n=()=>{const e=o(),t=document.querySelector("[data-cart-count]");t&&(t.textContent=`Cart (${e})`)};document.addEventListener("DOMContentLoaded",n);window.addEventListener("cart:updated",n);
