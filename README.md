@@ -14,6 +14,8 @@ PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 
 ## Vercel deployment
 
+Use Node.js 18.x in Vercel.
+
 Add the same values in Vercel Project Settings → Environment Variables for all environments (Production, Preview, Development).
 
 Required variables:
