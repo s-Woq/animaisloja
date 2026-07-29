@@ -1,0 +1,29 @@
+---
+const navItems = [
+  { label: 'Home', href: '/' },
+  { label: 'Shop', href: '/shop' },
+  { label: 'About', href: '/about' },
+  { label: 'Contact', href: '/contact' },
+];
+import imglogo from '../layouts/icon.ico';
+---
+
+<header class="border-b border-slate-200 bg-white/90 backdrop-blur">
+  <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+    <a href="/" class="flex items-center gap-3 text-lg font-semibold text-slate-900">
+      <img src={imglogo} alt="Paw & Co." width="44" height="44" class="rounded-full object-contain p-0.5" style="image-rendering: auto;" />
+      <span>Paw & Co.</span>
+    </a>
+
+    <nav class="hidden gap-6 text-sm font-medium text-slate-600 md:flex">
+      {navItems.map((item) => (
+        <a href={item.href} class="transition hover:text-amber-600">{item.label}</a>
+      ))}
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <a href="/shop" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-amber-500 hover:text-amber-600">Shop</a>
+      <a href="/checkout" class="rounded-full bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-amber-600">Cart (0)</a>
+    </div>
+  </div>
+</header>

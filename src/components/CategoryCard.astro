@@ -1,0 +1,17 @@
+---
+import type { Category } from '../types/product';
+
+interface Props {
+  category: Category;
+}
+
+const { category } = Astro.props;
+---
+
+<a href={`/shop?category=${category.slug}`} class="group overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+  <img src={category.image} alt={category.name} class="h-44 w-full object-cover" />
+  <div class="p-5">
+    <h3 class="text-lg font-semibold text-slate-900">{category.name}</h3>
+    <p class="mt-2 text-sm leading-6 text-slate-600">{category.description}</p>
+  </div>
+</a>

@@ -1,0 +1,21 @@
+{
+  "name": "lojaa-astro",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.111.0",
+    "@tailwindcss/vite": "^4.1.11",
+    "astro": "^5.0.0",
+    "tailwindcss": "^4.1.11"
+  },
+  "devDependencies": {
+    "sass": "^1.77.0"
+  }
+}

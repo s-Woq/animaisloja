@@ -1,0 +1,47 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Checkout | Paw & Co.">
+  <Navbar />
+
+  <main class="bg-slate-50">
+    <section class="mx-auto grid max-w-7xl gap-8 px-4 py-16 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
+      <div class="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
+        <h1 class="text-3xl font-semibold text-slate-900">Checkout</h1>
+        <form class="mt-8 space-y-6">
+          <div>
+            <label class="text-sm font-semibold text-slate-700">Full name</label>
+            <input class="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" placeholder="Alex Morgan" />
+          </div>
+          <div>
+            <label class="text-sm font-semibold text-slate-700">Email</label>
+            <input class="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" placeholder="alex@email.com" />
+          </div>
+          <div>
+            <label class="text-sm font-semibold text-slate-700">Shipping address</label>
+            <textarea class="mt-2 min-h-[110px] w-full rounded-2xl border border-slate-200 px-4 py-3" placeholder="42 Ocean Avenue, Seattle, WA"></textarea>
+          </div>
+          <div>
+            <label class="text-sm font-semibold text-slate-700">Payment</label>
+            <div class="mt-2 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-600">Stripe integration placeholder for future implementation.</div>
+          </div>
+        </form>
+      </div>
+
+      <aside class="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
+        <h2 class="text-xl font-semibold text-slate-900">Order summary</h2>
+        <div class="mt-6 space-y-4 text-sm text-slate-600">
+          <div class="flex justify-between"><span>Premium Dog Bed</span><span>$89</span></div>
+          <div class="flex justify-between"><span>Shipping</span><span>Free</span></div>
+          <div class="flex justify-between border-t border-slate-200 pt-4 text-base font-semibold text-slate-900"><span>Total</span><span>$89</span></div>
+        </div>
+        <button class="mt-8 w-full rounded-full bg-slate-900 px-6 py-3 font-medium text-white transition hover:bg-amber-600">Place order</button>
+      </aside>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
