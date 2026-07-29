@@ -14,5 +14,8 @@ export const supabase =
     : null;
 
 export function getSupabaseClient() {
+  if (!supabase) {
+    console.warn('Supabase is not configured. Set PUBLIC_SUPABASE_URL and PUBLIC_SUPABASE_ANON_KEY.');
+  }
   return supabase;
 }

@@ -12,7 +12,15 @@ PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
 PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 ```
 
-For deployment, add the same variables in your hosting provider's environment settings.
+## Vercel deployment
+
+Add the same values in Vercel Project Settings → Environment Variables for all environments (Production, Preview, Development).
+
+Required variables:
+- `PUBLIC_SUPABASE_URL`
+- `PUBLIC_SUPABASE_ANON_KEY`
+
+If you do not configure them, the app will still build, but Supabase-powered features will be unavailable until the variables are provided.
 
 ## Run locally
 
