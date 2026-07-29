@@ -12,6 +12,8 @@ PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
 PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 ```
 
+For deployment, add the same variables in your hosting provider's environment settings.
+
 ## Run locally
 
 ```bash
