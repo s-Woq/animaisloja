@@ -4,13 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "prebuild": "chmod +x node_modules/.bin/* || true",
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview"
   },
   "engines": {
-    "node": "18.x"
+    "node": ">=20.0.0"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.111.0",
