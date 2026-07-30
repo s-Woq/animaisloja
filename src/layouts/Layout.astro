@@ -16,6 +16,25 @@ const { img = '' } = Astro.props;
     
     <link rel="apple-touch-icon" href="/logoanimais.png" />
     <title>{title}</title>
+    <script is:inline>
+      (() => {
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const useDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+        document.documentElement.classList.toggle('dark-mode', useDark);
+
+        const syncBodyClass = () => {
+          if (!document.body) return;
+          document.body.classList.toggle('dark-mode', useDark);
+        };
+
+        if (document.body) {
+          syncBodyClass();
+        } else {
+          document.addEventListener('DOMContentLoaded', syncBodyClass, { once: true });
+        }
+      })();
+    </script>
    
   </head>
   <body>
