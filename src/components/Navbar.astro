@@ -7,7 +7,7 @@ const navItems = [
   { label: 'Account', href: '/account' },
   { label: 'Checkout', href: '/checkout' },
 ];
-import imglogo from '../layouts/icon.ico';
+import imglogo from '../layouts/logoanimais.png';
 ---
 
 <script>
@@ -28,7 +28,13 @@ import imglogo from '../layouts/icon.ico';
 <header class="border-b border-slate-200 bg-white/90 backdrop-blur">
   <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
     <a href="/" class="flex items-center gap-3 text-lg font-semibold text-slate-900">
-      <img src={imglogo} alt="Paw & Co." class="w-26 h-26" />
+      <div class="h-16 w-16 overflow-hidden rounded-full flex-shrink-0">
+        <img
+          src={imglogo}
+          alt="Paw & Co."
+          class="h-full w-full object-cover object-center"
+        />
+      </div>
       <span>Paw & Co.</span>
     </a>
 
