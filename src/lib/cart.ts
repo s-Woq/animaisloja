@@ -3,13 +3,14 @@ export type CartItem = {
   quantity: number;
 };
 
-export const CART_STORAGE_KEY = 'paw-cart';
+export const CART_STORAGE_KEY = 'lojaa-cart';
+const LEGACY_CART_STORAGE_KEY = 'paw-cart';
 
 export function getCart(): CartItem[] {
   if (typeof window === 'undefined') return [];
 
   try {
-    const raw = localStorage.getItem(CART_STORAGE_KEY);
+    const raw = localStorage.getItem(CART_STORAGE_KEY) ?? localStorage.getItem(LEGACY_CART_STORAGE_KEY);
     return raw ? JSON.parse(raw) : [];
   } catch {
     return [];
@@ -20,6 +21,7 @@ export function setCart(items: CartItem[]) {
   if (typeof window === 'undefined') return;
 
   localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+  localStorage.removeItem(LEGACY_CART_STORAGE_KEY);
   window.dispatchEvent(new Event('cart:updated'));
 }
 
