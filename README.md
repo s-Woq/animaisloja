@@ -21,8 +21,18 @@ Add the same values in Vercel Project Settings → Environment Variables for all
 Required variables:
 - `PUBLIC_SUPABASE_URL`
 - `PUBLIC_SUPABASE_ANON_KEY`
+- `STRIPE_SECRET_KEY` (test key for checkout)
 
 If you do not configure them, the app will still build, but Supabase-powered features will be unavailable until the variables are provided.
+
+## Stripe test checkout
+
+1. Create a Stripe account and switch to **Test mode**.
+2. Copy your test secret key (`sk_test_...`).
+3. Add `STRIPE_SECRET_KEY` to your local `.env` and Vercel environment variables.
+4. Start checkout from `/checkout` and use this test card:
+
+`4242 4242 4242 4242` with any future expiry date, any CVC, and any ZIP/postal code.
 
 ## Run locally
 

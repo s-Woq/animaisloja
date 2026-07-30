@@ -1,0 +1,45 @@
+<aside id="cookie-banner" class="fixed inset-x-0 bottom-0 z-50 hidden border-t border-slate-200 bg-white/95 backdrop-blur" aria-live="polite" aria-label="Cookie preferences">
+  <div class="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4 sm:px-6 lg:flex-row lg:items-end lg:justify-between lg:px-8">
+    <div class="max-w-3xl">
+      <h2 class="text-base font-semibold text-slate-900">Cookies and Data Use</h2>
+      <p class="mt-2 text-sm leading-6 text-slate-600">We store essential cart and cookie-preference data in your browser, and send checkout details to Stripe only when you start payment. We may also keep technical request logs for security.</p>
+      <a href="/cookie-policy" class="mt-2 inline-block text-sm font-semibold text-amber-700 transition hover:text-amber-800">Read Cookie Policy</a>
+    </div>
+    <div class="flex gap-3">
+      <button id="cookie-reject" type="button" class="rounded-full border border-slate-300 px-5 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-400">Reject optional</button>
+      <button id="cookie-accept" type="button" class="rounded-full bg-slate-900 px-5 py-2 text-sm font-medium text-white transition hover:bg-amber-600">Accept</button>
+    </div>
+  </div>
+</aside>
+
+<script>
+  const CONSENT_KEY = 'paw-cookie-consent-v1';
+
+  const initCookieBanner = () => {
+    const banner = document.getElementById('cookie-banner');
+    const acceptButton = document.getElementById('cookie-accept');
+    const rejectButton = document.getElementById('cookie-reject');
+
+    if (!banner || !acceptButton || !rejectButton) return;
+
+    const existingChoice = localStorage.getItem(CONSENT_KEY);
+    if (existingChoice === 'accepted' || existingChoice === 'rejected') return;
+
+    banner.classList.remove('hidden');
+
+    const saveChoice = (value: 'accepted' | 'rejected') => {
+      localStorage.setItem(CONSENT_KEY, value);
+      banner.classList.add('hidden');
+      window.dispatchEvent(new CustomEvent('cookie:consent-updated', { detail: { value } }));
+    };
+
+    acceptButton.addEventListener('click', () => saveChoice('accepted'));
+    rejectButton.addEventListener('click', () => saveChoice('rejected'));
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCookieBanner, { once: true });
+  } else {
+    initCookieBanner();
+  }
+</script>

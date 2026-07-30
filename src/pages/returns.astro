@@ -1,0 +1,40 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Trocas e Devolucoes | Lojaa">
+  <Navbar />
+
+  <main class="bg-slate-50">
+    <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+      <div class="max-w-4xl">
+        <p class="text-sm font-semibold uppercase tracking-[0.3em] text-amber-600">Livre Resolucao</p>
+        <h1 class="mt-3 text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">Trocas e Devolucoes</h1>
+        <p class="mt-6 text-lg leading-8 text-slate-600">Esta politica descreve o direito de livre resolucao aplicavel a compras online, nos termos da Diretiva 2011/83/UE e do Decreto-Lei n.o 24/2014.</p>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+      <div class="space-y-6">
+        <article class="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
+          <h2 class="text-2xl font-semibold text-slate-900">1. Prazo de Devolucao</h2>
+          <p class="mt-4 text-slate-600 leading-8">O cliente pode exercer o direito de livre resolucao no prazo de <strong>14 dias de calendario</strong> a contar da rececao do produto, sem necessidade de indicar motivo e sem penalizacao.</p>
+        </article>
+
+        <article class="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
+          <h2 class="text-2xl font-semibold text-slate-900">2. Reembolso</h2>
+          <p class="mt-4 text-slate-600 leading-8">A Lojaa garante reembolso integral no prazo maximo de <strong>14 dias</strong> apos a comunicacao da livre resolucao, sujeito a verificacao do estado do produto devolvido.</p>
+        </article>
+
+        <article class="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
+          <h2 class="text-2xl font-semibold text-slate-900">3. Como Solicitar</h2>
+          <p class="mt-4 text-slate-600 leading-8">Para iniciar a devolucao, envie pedido para suporte@lojaa.pt com numero da encomenda e identificacao do produto.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>

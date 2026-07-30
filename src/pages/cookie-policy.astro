@@ -1,0 +1,77 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Cookie Policy | Paw & Co.">
+  <Navbar />
+
+  <main class="bg-slate-50">
+    <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+      <div class="max-w-4xl">
+        <p class="text-sm font-semibold uppercase tracking-[0.3em] text-amber-600">Legal</p>
+        <h1 class="mt-3 text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">Cookie Policy</h1>
+        <p class="mt-6 text-lg leading-8 text-slate-600">This policy explains what data we collect through cookies and similar technologies when you browse Paw &amp; Co., and how those tools are used in line with Portugal and EU privacy requirements.</p>
+        <p class="mt-3 text-sm text-slate-500">Last updated: 2026-07-30</p>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+      <div class="space-y-6">
+        <article class="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
+          <h2 class="text-2xl font-semibold text-slate-900">1. What We Collect</h2>
+          <div class="mt-4 space-y-3 text-slate-600 leading-8">
+            <p><strong>Essential storage:</strong> cart items and cookie-consent preference stored in your browser so the shop and checkout can function.</p>
+            <p><strong>Checkout data:</strong> when you start payment, product details and order totals are sent securely to our payment provider (Stripe).</p>
+            <p><strong>Technical logs:</strong> hosting and API logs may contain IP address, browser type, and request timestamps for security and troubleshooting.</p>
+          </div>
+        </article>
+
+        <article class="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
+          <h2 class="text-2xl font-semibold text-slate-900">2. Why We Use Cookies</h2>
+          <div class="mt-4 space-y-3 text-slate-600 leading-8">
+            <p>We use essential cookies and local storage to keep your session functional, preserve your shopping cart, and remember your consent choices.</p>
+            <p>Optional analytics or marketing cookies should only be enabled after explicit consent. If optional cookies are added later, this policy and the consent banner should be updated.</p>
+          </div>
+        </article>
+
+        <article class="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
+          <h2 class="text-2xl font-semibold text-slate-900">3. Legal Basis and Consent</h2>
+          <p class="mt-4 text-slate-600 leading-8">Essential cookies are used on the basis of legitimate interest and technical necessity for service operation. Non-essential cookies require prior consent under applicable EU and Portuguese ePrivacy and GDPR rules.</p>
+        </article>
+
+        <article class="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
+          <h2 class="text-2xl font-semibold text-slate-900">4. Retention</h2>
+          <div class="mt-4 space-y-3 text-slate-600 leading-8">
+            <p>Cart and consent preference remain in your browser until you clear site data or local storage.</p>
+            <p>Server logs are retained for operational security and limited periods according to hosting provider settings.</p>
+          </div>
+        </article>
+
+        <article class="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
+          <h2 class="text-2xl font-semibold text-slate-900">5. Third Parties</h2>
+          <p class="mt-4 text-slate-600 leading-8">Payments are processed by Stripe as an independent service provider. Their use of data is governed by Stripe's own privacy and cookie practices.</p>
+        </article>
+
+        <article class="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
+          <h2 class="text-2xl font-semibold text-slate-900">6. Your Choices</h2>
+          <div class="mt-4 space-y-3 text-slate-600 leading-8">
+            <p>You can accept or reject non-essential cookies in the banner.</p>
+            <p>You can clear browser cookies and local storage at any time in your browser settings.</p>
+            <p>You can contact support to exercise GDPR rights related to personal data processing.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+      <div class="rounded-[2rem] border border-amber-200 bg-amber-50 p-8 text-amber-900 shadow-sm">
+        <h2 class="text-xl font-semibold">Important note before publishing</h2>
+        <p class="mt-3 leading-8">This cookie policy is a practical template and not legal advice. Replace placeholders with your official business details and request legal review in Portugal before public launch.</p>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>

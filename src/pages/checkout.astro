@@ -26,7 +26,9 @@ import Footer from '../components/Footer.astro';
           </div>
           <div>
             <label class="text-sm font-semibold text-slate-700">Payment</label>
-            <div class="mt-2 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-600">Stripe integration placeholder for future implementation.</div>
+            <div class="mt-2 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-600">
+              Stripe test checkout is enabled. Use test card <strong>4242 4242 4242 4242</strong>, any future date, any CVC and ZIP.
+            </div>
           </div>
         </form>
       </div>
@@ -36,7 +38,8 @@ import Footer from '../components/Footer.astro';
         <div id="cart-summary" class="mt-6 space-y-4 text-sm text-slate-600">
           <p class="text-slate-500">Loading your cart...</p>
         </div>
-        <button class="mt-8 w-full rounded-full bg-slate-900 px-6 py-3 font-medium text-white transition duration-200 hover:-translate-y-0.5 hover:bg-amber-600 active:scale-95">Place order</button>
+        <p id="checkout-status" class="mt-6 hidden rounded-2xl px-4 py-3 text-sm"></p>
+        <button id="checkout-button" type="button" class="mt-8 w-full rounded-full bg-slate-900 px-6 py-3 font-medium text-white transition duration-200 hover:-translate-y-0.5 hover:bg-amber-600 active:scale-95">Pay with Stripe (Test)</button>
       </aside>
     </section>
   </main>
@@ -46,11 +49,43 @@ import Footer from '../components/Footer.astro';
 
 <script>
   import { products } from '../data/products';
-  import { getCartItemsForProducts, removeFromCart, updateCartItem } from '../lib/cart';
+  import { getCart, getCartItemsForProducts, removeFromCart, setCart, updateCartItem } from '../lib/cart';
+
+  const formatEur = (value: number) => new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' }).format(value);
 
   const initCartSummary = () => {
     const container = document.getElementById('cart-summary');
+    const checkoutButton = document.getElementById('checkout-button') as HTMLButtonElement | null;
+    const statusEl = document.getElementById('checkout-status') as HTMLParagraphElement | null;
     if (!container) return;
+
+    const setStatus = (message: string, tone: 'error' | 'success' | 'info') => {
+      if (!statusEl) return;
+
+      const toneClass = tone === 'error'
+        ? 'border border-rose-200 bg-rose-50 text-rose-700'
+        : tone === 'success'
+          ? 'border border-emerald-200 bg-emerald-50 text-emerald-700'
+          : 'border border-slate-200 bg-slate-100 text-slate-700';
+
+      statusEl.className = `mt-6 rounded-2xl px-4 py-3 text-sm ${toneClass}`;
+      statusEl.textContent = message;
+      statusEl.classList.remove('hidden');
+    };
+
+    const clearStatus = () => {
+      if (!statusEl) return;
+      statusEl.classList.add('hidden');
+      statusEl.textContent = '';
+    };
+
+    const queryStatus = new URLSearchParams(window.location.search).get('status');
+    if (queryStatus === 'success') {
+      setCart([]);
+      setStatus('Test payment completed successfully.', 'success');
+    } else if (queryStatus === 'cancelled') {
+      setStatus('Payment was cancelled. Your cart is unchanged.', 'info');
+    }
 
     const renderCartSummary = () => {
       const cartItems = getCartItemsForProducts(products);
@@ -58,8 +93,11 @@ import Footer from '../components/Footer.astro';
 
       if (cartItems.length === 0) {
         container.innerHTML = '<p class="text-slate-500">Your cart is empty.</p>';
+        if (checkoutButton) checkoutButton.disabled = true;
         return;
       }
+
+      if (checkoutButton) checkoutButton.disabled = false;
 
       container.innerHTML = `
         <div class="space-y-4">
@@ -68,7 +106,7 @@ import Footer from '../components/Footer.astro';
               <div class="flex items-start justify-between gap-3">
                 <div>
                   <p class="font-medium text-slate-900">${item.name}</p>
-                  <p class="mt-1 text-sm text-slate-500">$${item.price.toFixed(2)} each</p>
+                  <p class="mt-1 text-sm text-slate-500">${formatEur(item.price)} cada</p>
                 </div>
                 <button data-remove-item data-slug="${item.slug}" class="text-sm font-medium text-rose-600 transition duration-200 hover:-translate-y-0.5 hover:text-rose-700 active:scale-95">Remove</button>
               </div>
@@ -78,14 +116,54 @@ import Footer from '../components/Footer.astro';
                   <span class="min-w-8 text-center text-sm font-semibold text-slate-900">${item.quantity}</span>
                   <button data-adjust-quantity data-slug="${item.slug}" data-change="1" class="px-3 py-1 text-lg text-slate-600 transition duration-200 hover:-translate-y-0.5 hover:text-slate-900 active:scale-95">+</button>
                 </div>
-                <p class="font-semibold text-slate-900">$${(item.price * item.quantity).toFixed(2)}</p>
+                <p class="font-semibold text-slate-900">${formatEur(item.price * item.quantity)}</p>
               </div>
             </div>
           `).join('')}
           <div class="flex justify-between"><span>Shipping</span><span>Free</span></div>
-          <div class="flex justify-between border-t border-slate-200 pt-4 text-base font-semibold text-slate-900"><span>Total</span><span>$${subtotal.toFixed(2)}</span></div>
+          <div class="flex justify-between border-t border-slate-200 pt-4 text-base font-semibold text-slate-900"><span>Total</span><span>${formatEur(subtotal)}</span></div>
+          <p class="text-xs text-slate-500">Precos com IVA incluido.</p>
         </div>
       `;
+    };
+
+    const startCheckout = async () => {
+      const cart = getCart();
+      if (cart.length === 0) {
+        setStatus('Add at least one product before checkout.', 'error');
+        return;
+      }
+
+      clearStatus();
+      if (checkoutButton) {
+        checkoutButton.disabled = true;
+        checkoutButton.textContent = 'Redirecting to Stripe...';
+      }
+
+      try {
+        const response = await fetch('/api/stripe/create-checkout-session', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ items: cart }),
+        });
+
+        const payload = await response.json();
+
+        if (!response.ok || !payload?.url) {
+          throw new Error(payload?.error || 'Unable to start Stripe checkout.');
+        }
+
+        window.location.href = payload.url;
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Payment initialization failed.';
+        setStatus(message, 'error');
+        if (checkoutButton) {
+          checkoutButton.disabled = false;
+          checkoutButton.textContent = 'Pay with Stripe (Test)';
+        }
+      }
     };
 
     container.addEventListener('click', (event: MouseEvent) => {
@@ -113,6 +191,7 @@ import Footer from '../components/Footer.astro';
     });
 
     window.addEventListener('cart:updated', renderCartSummary);
+    checkoutButton?.addEventListener('click', startCheckout);
     renderCartSummary();
   };
 

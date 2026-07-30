@@ -13,6 +13,7 @@ export async function getStaticPaths() {
 }
 
 const { product } = Astro.props;
+const eurFormatter = new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' });
 ---
 
 <Layout title={`${product.name} | Paw & Co.`}>
@@ -32,9 +33,10 @@ const { product } = Astro.props;
         </div>
 
         <div class="flex items-center gap-3">
-          <p class="text-3xl font-semibold text-slate-900">${product.price}</p>
-          {product.oldPrice && <p class="text-lg text-slate-400 line-through">${product.oldPrice}</p>}
+          <p class="text-3xl font-semibold text-slate-900">{eurFormatter.format(product.price)}</p>
+          {product.oldPrice && <p class="text-lg text-slate-400 line-through">{eurFormatter.format(product.oldPrice)}</p>}
         </div>
+        <p class="text-sm text-slate-500">Precos com IVA incluido.</p>
 
         <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
           <p><strong>Stock:</strong> {product.stock > 0 ? 'In stock' : 'Out of stock'}</p>
