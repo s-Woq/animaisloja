@@ -3,7 +3,6 @@ import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import Footer from '../../components/Footer.astro';
 import { products } from '../../data/products';
-import logoimg from '../../img/logoanimais.png';
 
 export async function getStaticPaths() {
   return products.map((product) => ({
@@ -43,13 +42,77 @@ const eurFormatter = new Intl.NumberFormat('pt-PT', { style: 'currency', currenc
           <p class="mt-2"><strong>Rating:</strong> {product.rating} from {product.reviews} reviews</p>
         </div>
 
-        <div class="flex flex-wrap gap-3">
-          <button class="rounded-full bg-amber-500 px-6 py-3 font-medium text-white transition hover:bg-amber-600">Add to cart</button>
+        <div class="flex flex-wrap items-center gap-3">
+          <label for="product-quantity" class="text-sm font-medium text-slate-600">Qty</label>
+          <input
+            id="product-quantity"
+            name="quantity"
+            type="number"
+            min="1"
+            max={product.stock > 0 ? String(product.stock) : '1'}
+            value="1"
+            class="w-20 rounded-full border border-slate-300 px-3 py-3 text-center text-slate-800 outline-none focus:border-amber-500"
+            aria-label="Product quantity"
+          />
+          <button
+            id="add-to-cart-button"
+            data-product-slug={product.slug}
+            class="cursor-pointer rounded-full bg-amber-500 px-6 py-3 font-medium text-white transition hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-60"
+            disabled={product.stock <= 0}
+          >
+            {product.stock > 0 ? 'Add to cart' : 'Out of stock'}
+          </button>
           <a href="/checkout" class="rounded-full border border-slate-300 px-6 py-3 font-medium text-slate-700 transition hover:border-amber-500 hover:text-amber-600">Buy now</a>
         </div>
+        <p id="add-to-cart-status" class="hidden rounded-2xl px-4 py-3 text-sm"></p>
       </div>
     </section>
   </main>
 
   <Footer />
 </Layout>
+
+<script>
+  import { addToCart } from '../../lib/cart';
+
+  const addButton = document.getElementById('add-to-cart-button') as HTMLButtonElement | null;
+  const qtyInput = document.getElementById('product-quantity') as HTMLInputElement | null;
+  const statusEl = document.getElementById('add-to-cart-status') as HTMLParagraphElement | null;
+
+  const showStatus = (message: string, tone: 'success' | 'error') => {
+    if (!statusEl) return;
+
+    const toneClass = tone === 'success'
+      ? 'border border-emerald-200 bg-emerald-50 text-emerald-700'
+      : 'border border-rose-200 bg-rose-50 text-rose-700';
+
+    statusEl.className = `rounded-2xl px-4 py-3 text-sm ${toneClass}`;
+    statusEl.textContent = message;
+    statusEl.classList.remove('hidden');
+  };
+
+  const clampQuantity = () => {
+    if (!qtyInput) return 1;
+
+    const min = Number(qtyInput.min || '1');
+    const max = Number(qtyInput.max || '999');
+    const current = Number(qtyInput.value || '1');
+    const safeValue = Number.isFinite(current) ? Math.min(Math.max(current, min), max) : min;
+    qtyInput.value = String(safeValue);
+    return safeValue;
+  };
+
+  qtyInput?.addEventListener('change', clampQuantity);
+
+  addButton?.addEventListener('click', () => {
+    const slug = addButton.getAttribute('data-product-slug');
+    if (!slug) return;
+
+    const quantity = clampQuantity();
+    for (let i = 0; i < quantity; i += 1) {
+      addToCart(slug);
+    }
+
+    showStatus(`Added ${quantity} item${quantity > 1 ? 's' : ''} to cart.`, 'success');
+  });
+</script>
