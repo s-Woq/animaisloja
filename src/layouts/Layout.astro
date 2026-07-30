@@ -19,8 +19,7 @@ const { img = '' } = Astro.props;
     <script is:inline>
       (() => {
         const savedTheme = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const useDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+        const useDark = savedTheme ? savedTheme === 'dark' : true;
         document.documentElement.classList.toggle('dark-mode', useDark);
 
         const syncBodyClass = () => {
@@ -37,7 +36,7 @@ const { img = '' } = Astro.props;
     </script>
    
   </head>
-  <body>
+  <body class="dark-mode">
     
     <slot />
     <CookieBanner />
