@@ -8,10 +8,10 @@ interface Props {
 const { category } = Astro.props;
 ---
 
-<a href={`/shop?category=${category.slug}`} class="group overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+<a href={`/shop?category=${category.slug}`} class="group overflow-hidden rounded-3xl border border-orange-500/15 bg-[#0d0d0d] shadow-[0_16px_50px_rgba(0,0,0,0.35)] transition hover:-translate-y-1 hover:border-[#fb923c]/50 hover:shadow-[0_22px_60px_rgba(249,115,22,0.12)]">
   <img src={category.image} alt={category.name} class="h-44 w-full object-cover" />
   <div class="p-5">
-    <h3 class="text-lg font-semibold text-slate-900">{category.name}</h3>
-    <p class="mt-2 text-sm leading-6 text-slate-600">{category.description}</p>
+    <h3 class="text-lg font-semibold text-[#fff4e8]">{category.name}</h3>
+    <p class="mt-2 text-sm leading-6 text-[#d7c5b7]">{category.description}</p>
   </div>
 </a>
