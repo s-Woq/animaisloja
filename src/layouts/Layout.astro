@@ -1,8 +1,9 @@
 ---
 import '../styles/global.css';
-import logo from '../styles/icon.ico';
+import logo from '../../img/bigicon.webp?url';
+import appleTouchIcon from '../../img/bigicon.webp?url';
 import CookieBanner from '../components/CookieBanner.astro';
-const { title = 'Paw & Co.' } = Astro.props; 
+const { title = 'iRacional' } = Astro.props; 
 const { img = '' } = Astro.props;
 ---
 
@@ -14,7 +15,7 @@ const { img = '' } = Astro.props;
     
     <link rel="icon" type="image/x-icon" href={logo} />
     
-    <link rel="apple-touch-icon" href="/logoanimais.png" />
+    <link rel="apple-touch-icon" href={appleTouchIcon} />
     <title>{title}</title>
     <script is:inline>
       (() => {
